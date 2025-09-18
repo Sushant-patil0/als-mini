@@ -1,6 +1,12 @@
 {
-  "rewrites": [
-    { "source": "/upload_image", "destination": "https://REPLACE_WITH_YOUR_RENDER_URL/upload_image" }
-  ],
-  "cleanUrls": true
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/web_model/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
 }
