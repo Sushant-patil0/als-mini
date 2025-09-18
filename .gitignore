@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.log
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE/editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# App uploads (temporary)
+asl_video_interpreter/static/uploads/
+
+# Large datasets (do not commit)
+asl_alphabet_train/
+asl_alphabet_test/
+
+# Byte-compiled / optimized / DLL files
+*.so
+*.dll
+*.dylib
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# If model file becomes large (>100MB), consider Git LFS or hosting externally
+# Keep tracked for now since current size < 100MB
+# asl_video_interpreter/model/asl_alphabet_cnn.h5
