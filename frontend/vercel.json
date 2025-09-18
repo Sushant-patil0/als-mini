@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/upload_image", "destination": "https://REPLACE_WITH_YOUR_RENDER_URL/upload_image" }
+  ],
+  "cleanUrls": true
+}
