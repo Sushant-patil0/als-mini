@@ -1,0 +1,7 @@
+.venv/
+*.h5
+*.pyd
+*.dll
+*.pyc
+__pycache__/
+uploads/

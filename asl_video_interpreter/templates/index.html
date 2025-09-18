@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ASL Image Interpreter</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #667eea !important;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: #495057 !important;
+            margin: 0 0.5rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            background: #667eea;
+            color: white !important;
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            margin-top: 2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        
+        h1 {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            color: #333;
+            font-weight: 700;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        h4 {
+            color: #333;
+            font-weight: 600;
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .upload-description {
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, #28a745, #20c997) !important;
+            border: none !important;
+            color: white !important;
+            border-radius: 20px !important;
+            padding: 2.5rem !important;
+            font-weight: 600 !important;
+            font-size: 1.8rem !important;
+            box-shadow: 0 10px 30px rgba(40, 167, 69, 0.3) !important;
+            margin-bottom: 2rem !important;
+        }
+        
+        .form-control {
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 20px;
+            padding: 3rem;
+            font-size: 1.2rem;
+            font-weight: 500;
+            text-align: center;
+            color: #667eea;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .form-control:hover {
+            border-color: #5a67d8;
+            background: #e3f2fd;
+            transform: scale(1.02);
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            outline: none;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, #218838, #1e7e34);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #5a67d8, #667eea);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .upload-icon {
+            margin-bottom: 1.5rem;
+        }
+        
+        .upload-icon i {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .prediction-icon {
+            margin-bottom: 1.5rem;
+        }
+        
+        .prediction-icon i {
+            font-size: 4rem;
+            color: #28a745;
+            background: rgba(40, 167, 69, 0.1);
+            padding: 1.5rem;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
+        
+        /* Simple animations only */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Loading state */
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+        }
+        
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* File selected state */
+        .file-selected {
+            border-color: #28a745 !important;
+            background: #d4edda !important;
+            color: #155724 !important;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+            
+            .form-control {
+                padding: 2rem;
+                font-size: 1rem;
+            }
+            
+            .btn-success, .btn-secondary {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Clean navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-hands me-2"></i>
+                ASL Interpreter
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Your exact original structure with optimized styling -->
+    <div class="container text-center mt-5 fade-in" style="margin-top: 100px !important;">
+        <h1 class="mb-4">ASL to Text Interpreter</h1>
+        {% if prediction %}
+            <div class="prediction-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2 class="mb-3">Predicted Text</h2>
+            <div class="alert alert-success fs-4">"{{ prediction }}"</div>
+            <a href="/" class="btn btn-secondary">
+                <i class="fas fa-redo me-2"></i>Try Another
+            </a>
+        {% else %}
+            <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <h4>Upload ASL Image</h4>
+            <p class="upload-description">
+                Select an image containing American Sign Language gestures and our AI will convert it to text
+            </p>
+            <form action="/upload_image" method="POST" enctype="multipart/form-data" id="uploadForm">
+                <div class="mb-4">
+                    <input type="file" name="image" accept="image/*" class="form-control" id="fileInput" required>
+                    <div class="form-text mt-2" style="color: #6c757d;">
+                        Supported formats: JPG, PNG, GIF • Max size: 10MB
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success" id="submitBtn">
+                    <i class="fas fa-magic me-2"></i>Upload Image & Predict
+                </button>
+            </form>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Enhanced file input with better UX
+        const fileInput = document.getElementById('fileInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const uploadForm = document.getElementById('uploadForm');
+
+        if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    const fileName = e.target.files[0].name;
+                    this.classList.add('file-selected');
+                    
+                    // Create a temporary div to show file name
+                    let fileInfo = document.querySelector('.file-info');
+                    if (!fileInfo) {
+                        fileInfo = document.createElement('div');
+                        fileInfo.className = 'file-info mt-2';
+                        fileInfo.style.color = '#28a745';
+                        fileInfo.style.fontWeight = '600';
+                        this.parentNode.appendChild(fileInfo);
+                    }
+                    fileInfo.innerHTML = `<i class="fas fa-check-circle me-2"></i>Selected: ${fileName}`;
+                } else {
+                    this.classList.remove('file-selected');
+                    const fileInfo = document.querySelector('.file-info');
+                    if (fileInfo) fileInfo.remove();
+                }
+            });
+        }
+
+        // Form submission with loading state
+        if (uploadForm) {
+            uploadForm.addEventListener('submit', function(e) {
+                if (fileInput.files.length === 0) {
+                    e.preventDefault();
+                    alert('Please select an image file first.');
+                    return;
+                }
+
+                // Add loading state
+                submitBtn.classList.add('btn-loading');
+                submitBtn.disabled = true;
+                
+                // Update text after a brief delay to show the loading animation
+                setTimeout(() => {
+                    submitBtn.innerHTML = 'Processing...';
+                }, 100);
+            });
+        }
+
+        // Simple drag and drop
+        if (fileInput) {
+            const container = fileInput.parentNode;
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                container.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                container.addEventListener(eventName, () => {
+                    fileInput.style.borderColor = '#28a745';
+                    fileInput.style.background = '#d4edda';
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                container.addEventListener(eventName, () => {
+                    fileInput.style.borderColor = '#667eea';
+                    fileInput.style.background = '#f8f9fa';
+                }, false);
+            });
+
+            container.addEventListener('drop', (e) => {
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            }, false);
+        }
+    </script>
+</body>
+</html>
